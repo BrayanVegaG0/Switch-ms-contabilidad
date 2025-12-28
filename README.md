@@ -175,7 +175,7 @@ docker build -t ms-contabilidad:latest .
 
 ### Run
 ```bash
-docker run -p 8080:8080 \
+docker run -p 8083:8083 \
   -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/contabilidad_db \
   -e SPRING_DATASOURCE_USERNAME=postgres \
   -e SPRING_DATASOURCE_PASSWORD=postgres \
