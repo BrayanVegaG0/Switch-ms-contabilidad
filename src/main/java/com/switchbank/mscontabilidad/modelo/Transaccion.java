@@ -20,7 +20,7 @@ public class Transaccion {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cuentaid", nullable = false)
+    @JoinColumn(name = "cuentaId", nullable = false)
     private Cuenta cuenta;
 
     @Column(name = "monto", nullable = false, precision = 19, scale = 2)
@@ -30,7 +30,7 @@ public class Transaccion {
     @Column(name = "tipo", nullable = false)
     private TipoOperacion tipo;
 
-    @Column(name = "referenciauuid", nullable = false)
+    @Column(name = "referenciaUuid", nullable = false)
     private String referenciaUuid;
 
     @Column(name = "fechaCreacion")

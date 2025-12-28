@@ -2,6 +2,7 @@ package com.switchbank.mscontabilidad.controlador;
 
 import com.switchbank.mscontabilidad.dto.CuentaDTO;
 import com.switchbank.mscontabilidad.dto.TransaccionRequestDTO;
+import com.switchbank.mscontabilidad.dto.TransaccionSwitchDTO;
 import com.switchbank.mscontabilidad.modelo.TipoOperacion;
 import com.switchbank.mscontabilidad.servicio.CuentaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,6 +61,33 @@ public class CuentaController {
             resultado = cuentaService.debitar(id, request.getMonto());
         } else {
             resultado = cuentaService.acreditar(id, request.getMonto());
+        }
+
+        return new ResponseEntity<>(resultado, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Procesar transacción desde el Switch",
+            description = "Busca la cuenta por su NÚMERO (no ID) y ejecuta la operación. Usado por el Orquestador.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Transacción aprobada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CuentaDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Cuenta no encontrada", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Saldo insuficiente", content = @Content)
+    })
+    @PostMapping("/transaccion-switch")
+    public ResponseEntity<CuentaDTO> realizarTransaccionSwitch(
+            @Valid @RequestBody com.switchbank.mscontabilidad.dto.TransaccionSwitchDTO request) {
+
+        // 1. Buscamos el ID interno usando el número de cuenta (Lookup)
+        CuentaDTO cuenta = cuentaService.obtenerCuentaPorNumero(request.getNumeroCuenta());
+
+        CuentaDTO resultado;
+
+        // 2. Ejecutamos la lógica según el tipo
+        if (request.getTipo() == TipoOperacion.DEBITO) {
+            // Nota: Podríamos sobrecargar el método debitar para recibir el UUID si queremos guardarlo en el log
+            resultado = cuentaService.debitar(cuenta.getId(), request.getMonto());
+        } else {
+            resultado = cuentaService.acreditar(cuenta.getId(), request.getMonto());
         }
 
         return new ResponseEntity<>(resultado, HttpStatus.CREATED);

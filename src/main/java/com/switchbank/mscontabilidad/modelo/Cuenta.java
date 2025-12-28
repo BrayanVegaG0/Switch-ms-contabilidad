@@ -17,10 +17,10 @@ public class Cuenta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "numerocuenta", nullable = false, unique = true)
+    @Column(name = "numeroCuenta", nullable = false, unique = true)
     private String numeroCuenta;
 
-    @Column(name = "referenciaclienteid", nullable = false)
+    @Column(name = "referenciaClienteId", nullable = false)
     private String referenciaClienteId;
 
     @Column(name = "saldo", nullable = false, precision = 19, scale = 2)
